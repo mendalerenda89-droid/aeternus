@@ -119,11 +119,15 @@
                 const ramaClass = r.rama === 'Romana' ? 'romana' : 'castrexa';
                 const item = document.createElement('div');
                 item.className = 'res-item';
+                const integrantesHtml = (r.members && r.members.length > 0)
+                    ? `<br><small style="color:#888;">👥 ${r.members.join(' · ')}</small>`
+                    : '';
                 item.innerHTML = `
                     <div>
                         <b>${r.date} | ${r.time}h</b> — ${r.name} (${r.size}p)
                         ${r.rama ? `<span class="rama-badge ${ramaClass}">${ramaIcon} ${r.rama}</span>` : ''}
                         <br><small>${r.email} | ${r.phone}</small>
+                        ${integrantesHtml}
                     </div>
                     <button onclick="removeRes('${r.id}')" class="btn-del">Eliminar</button>
                 `;
@@ -683,13 +687,14 @@
                 alert('No hay reservas para exportar.');
                 return;
             }
-            const cols = ['Fecha', 'Hora', 'Nombre', 'Rama', 'Participantes', 'Email', 'Teléfono', 'Tipo'];
+            const cols = ['Fecha', 'Hora', 'Nombre', 'Rama', 'Participantes', 'Integrantes', 'Email', 'Teléfono', 'Tipo'];
             let csv = '\uFEFF' + cols.join(';') + '\r\n';
             reservas.forEach(r => {
+                const integrantes = (r.members && r.members.length > 0) ? r.members.join(', ') : '';
                 const fila = [
                     r.date  || '', r.time  || '', r.name  || '',
-                    r.rama  || '', r.size  || '', r.email || '',
-                    r.phone || '', r.tipo  || ''
+                    r.rama  || '', r.size  || '', integrantes,
+                    r.email || '', r.phone || '', r.tipo  || ''
                 ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(';');
                 csv += fila + '\r\n';
             });

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANNUS ARGENTEUS — Arde Lucus XXV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-dim: #9a7e25;
+            --red: #8B0000;
+            --red-light: #c0392b;
+            --green: #2d6a2d;
+            --green-light: #3a8a3a;
+            --bg: #050505;
+            --card-bg: rgba(12,10,8,0.97);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'EB Garamond', serif;
+            background-color: var(--bg);
+            color: #ccc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── FONDO ── */
+        .bg-layer {
+            position: fixed; inset: 0; z-index: 0;
+            background-image: url('https://i.postimg.cc/NFw4qSWr/unnamed.jpg');
+            background-size: cover; background-position: center;
+            filter: brightness(0.18) saturate(0.6);
+        }
+        .bg-grain {
+            position: fixed; inset: 0; z-index: 1; opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 200px;
+        }
+        .bg-vignette {
+            position: fixed; inset: 0; z-index: 2;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+        }
+
+        /* ── LAYOUT ── */
+        .page {
+            position: relative; z-index: 10;
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 60px 20px 80px;
+        }
+
+        /* ── HEADER ── */
+        .header {
+            text-align: center;
+            margin-bottom: 70px;
+            animation: fadeDown 1.2s ease both;
+        }
+
+        .eyebrow {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 6px;
+            color: var(--gold-dim);
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .title-main {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: clamp(2.2rem, 6vw, 4rem);
+            font-weight: 700;
+            color: var(--gold);
+            text-shadow: 0 0 40px rgba(212,175,55,0.3), 0 2px 4px rgba(0,0,0,0.8);
+            line-height: 1.1;
+            letter-spacing: 2px;
+        }
+
+        .title-sub {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.85rem, 2vw, 1.1rem);
+            color: #888;
+            letter-spacing: 4px;
+            margin-top: 12px;
+            text-transform: uppercase;
+        }
+
+        .divider {
+            display: flex; align-items: center; gap: 16px;
+            margin: 28px auto;
+            width: min(500px, 90%);
+        }
+        .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim), transparent); }
+        .divider-icon { color: var(--gold); font-size: 1rem; }
+
+        .header-desc {
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #777;
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ── SECCIONES ── */
+        .section-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        /* ── GRID DE CARDS ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 60px;
+        }
+
+        .grid-solo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(212,175,55,0.25);
+            border-radius: 4px;
+            padding: 32px 28px;
+            text-decoration: none;
+            color: inherit;
+            display: flex; flex-direction: column;
+            transition: all 0.35s ease;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp 0.8s ease both;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(212,175,55,0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+        .card:hover::before { opacity: 1; }
+        .card:hover {
+            border-color: rgba(212,175,55,0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212,175,55,0.08);
+        }
+
+        /* Accent top line */
+        .card-accent {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+        }
+        .accent-gold  { background: linear-gradient(to right, transparent, var(--gold), transparent); }
+        .accent-red   { background: linear-gradient(to right, transparent, var(--red-light), transparent); }
+        .accent-green { background: linear-gradient(to right, transparent, var(--green-light), transparent); }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .card-tag {
+            font-family: 'Cinzel', serif;
+            font-size: 0.58rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+        .tag-gold  { color: var(--gold); }
+        .tag-red   { color: #e57373; }
+        .tag-green { color: #81c784; }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #f0e8d0;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            font-size: 0.92rem;
+            color: #666;
+            line-height: 1.65;
+            flex: 1;
+        }
+
+        .card-cta {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 20px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .card:hover .card-cta { opacity: 0.9; }
+
+        /* ── CARD WIDE (gestor) ── */
+        .card-wide {
+            max-width: 620px;
+            width: 100%;
+        }
+        .card-wide .card-inner {
+            display: flex; align-items: flex-start; gap: 24px;
+        }
+        .card-wide .card-icon { font-size: 2.8rem; margin-bottom: 0; flex-shrink: 0; }
+        .card-wide .card-content { flex: 1; }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            font-family: 'Cinzel', serif;
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            color: #333;
+            text-transform: uppercase;
+            padding-top: 40px;
+            border-top: 1px solid rgba(212,175,55,0.08);
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* ── ANIMACIONES ── */
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.15s; }
+
+        @media (max-width: 600px) {
+            .card-wide .card-inner { flex-direction: column; }
+            .title-main { font-size: 1.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="bg-grain"></div>
+<div class="bg-vignette"></div>
+
+<div class="page">
+
+    <!-- HEADER -->
+    <header class="header">
+        <p class="eyebrow">Arde Lucus · Lugo · 15–17 Junio 2026</p>
+        <h1 class="title-main">Annus Argenteus</h1>
+        <p class="title-sub">XXV años · Una ciudad · Una historia</p>
+        <div class="divider">
+            <div class="divider-line"></div>
+            <span class="divider-icon">⚔</span>
+            <div class="divider-line"></div>
+        </div>
+        <p class="header-desc">
+            Sistema de gestión del Escape Room interactivo del festival.<br>
+            Dos linajes. Seis misiones. Una sola ciudad.
+        </p>
+    </header>
+
+    <!-- SECCIÓN: INSCRIPCIONES -->
+    <p class="section-label">— Inscripciones para grupos —</p>
+
+    <div class="grid">
+
+        <a class="card" href="formulario_escaperoom_mananas.html">
+            <div class="card-accent accent-gold"></div>
+            <span class="card-icon">🌅</span>
+            <span class="card-tag tag-gold">Turno · Mañana</span>
+            <h2 class="card-title">Formulario de Inscripción — Mañana</h2>
+            <p class="card-desc">
+                Reserva de horario para el turno de mañana (10:00 – 13:00 h). 
+                El linaje —🦅 Romana o 🌿 Castrexa— se asigna automáticamente 
+                según el slot elegido.
+            </p>
+            <span class="card-cta tag-gold">Ir al formulario →</span>
+        </a>
+
+        <a class="card" href="formulario_escaperoom_tardes.html">
+            <div class="card-accent accent-gold"></div>
+            <span class="card-icon">🌆</span>
+            <span class="card-tag tag-gold">Turno · Tarde</span>
+            <h2 class="card-title">Formulario de Inscripción — Tarde</h2>
+            <p class="card-desc">
+                Reserva de horario para el turno de tarde (16:30 – 18:30 h). 
+                Los horarios se alternan entre linajes en continuidad con 
+                los turnos de mañana.
+            </p>
+            <span class="card-cta tag-gold">Ir al formulario →</span>
+        </a>
+
+    </div>
+
+    <!-- SECCIÓN: GESTIÓN -->
+    <p class="section-label">— Paneles de gestión —</p>
+
+    <div class="grid">
+
+        <a class="card" href="gestordereservas2.html">
+            <div class="card-accent accent-gold"></div>
+            <span class="card-icon">📋</span>
+            <span class="card-tag tag-gold">Administración</span>
+            <h2 class="card-title">Gestor de Reservas</h2>
+            <p class="card-desc">
+                Panel completo para consultar, filtrar y gestionar todas las 
+                reservas recibidas. Vista por día, linaje y estado. 
+                Acceso restringido al equipo organizador.
+            </p>
+            <span class="card-cta tag-gold">Abrir gestor →</span>
+        </a>
+
+        <a class="card" href="annusargenteusmaestro.html">
+            <div class="card-accent accent-red"></div>
+            <span class="card-icon">🎮</span>
+            <span class="card-tag tag-red">Game Master</span>
+            <h2 class="card-title">Panel Maestro</h2>
+            <p class="card-desc">
+                Control central de partidas en tiempo real. Cronómetro, 
+                pistas, estado de misiones y comunicación con los campamentos. 
+                Uso exclusivo durante el festival.
+            </p>
+            <span class="card-cta tag-red">Abrir panel →</span>
+        </a>
+
+        <a class="card" href="Annus_Argenteuss-campamento.html">
+            <div class="card-accent accent-green"></div>
+            <span class="card-icon">🏕️</span>
+            <span class="card-tag tag-green">Campamentos</span>
+            <h2 class="card-title">Panel de Campamento</h2>
+            <p class="card-desc">
+                Vista para los responsables de cada campamento. Seguimiento 
+                de la partida activa, recepción de pistas del maestro y 
+                actualización de estado en directo.
+            </p>
+            <span class="card-cta tag-green">Abrir panel →</span>
+        </a>
+
+    </div>
+
+    <footer>
+        <p>ANNUS ARGENTEUS · Arde Lucus · XXV Aniversario · MMXXVI</p>
+        <p style="margin-top:8px; font-size:0.55rem; opacity:0.5;">Sistema desarrollado por Webcerta · Todos los derechos reservados</p>
+    </footer>
+
+</div>
+
+</body>
+</html>
